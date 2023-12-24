@@ -913,7 +913,7 @@ static void xhci_disable_hub_port_wake(struct xhci_hcd *xhci,
 	unsigned long flags;
 	u32 t1, t2, portsc;
 	int i;
-
+	printk ("=====add debug xhci_disable_hub_port_wake=====");
 	spin_lock_irqsave(&xhci->lock, flags);
 
 	for (i = 0; i < rhub->num_ports; i++) {
@@ -936,6 +936,7 @@ static void xhci_disable_hub_port_wake(struct xhci_hcd *xhci,
 		}
 	}
 	spin_unlock_irqrestore(&xhci->lock, flags);
+	printk ("=====add debug xhci_disable_hub_port_wake end=====");
 }
 
 static bool xhci_pending_portevent(struct xhci_hcd *xhci)
