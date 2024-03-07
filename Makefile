@@ -1221,6 +1221,7 @@ endif
 	$(Q)$(MAKE) $(hdr-inst)=$(hdr-prefix)arch/$(SRCARCH)/include/uapi
 
 ifeq ($(KBUILD_EXTMOD),)
+-include $(srctree)/extmod.mk
 core-y			+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/
 core-$(CONFIG_BLOCK)	+= block/
 core-$(CONFIG_IO_URING)	+= io_uring/
@@ -1298,7 +1299,7 @@ $(sort $(vmlinux-deps) $(subdir-modorder)): descend ;
 
 filechk_kernel.release = \
 	echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion \
-		--save-tag $(srctree) $(BRANCH) $(KMI_GENERATION))"
+		--save-tag $(srctree) $(GOOGLE_BRANCH) $(KMI_GENERATION))"
 
 # Store (new) KERNELRELEASE string in include/config/kernel.release
 include/config/kernel.release: FORCE
@@ -1351,7 +1352,7 @@ uapi-asm-generic:
 # KERNELRELEASE can change from a few different places, meaning version.h
 # needs to be updated, so this check is forced on all builds
 
-uts_len := 64
+uts_len := 96
 define filechk_utsrelease.h
 	if [ `echo -n "$(KERNELRELEASE)" | wc -c ` -gt $(uts_len) ]; then \
 	  echo '"$(KERNELRELEASE)" exceeds $(uts_len) characters' >&2;    \
@@ -2060,7 +2061,7 @@ checkstack:
 
 kernelrelease:
 	@echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion \
-		$(srctree) $(BRANCH) $(KMI_GENERATION))"
+		$(srctree) $(GOOGLE_BRANCH) $(KMI_GENERATION))"
 
 kernelversion:
 	@echo $(KERNELVERSION)

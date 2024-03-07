@@ -40,7 +40,6 @@ static char *sound_devnode(struct device *dev, umode_t *mode)
 static int __init init_soundcore(void)
 {
 	int rc;
-
 	rc = init_oss_soundcore();
 	if (rc)
 		return rc;

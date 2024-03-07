@@ -469,6 +469,13 @@ static int do_read_inode(struct inode *inode)
 	fi->i_disk_time[1] = inode->i_ctime;
 	fi->i_disk_time[2] = inode->i_mtime;
 	fi->i_disk_time[3] = fi->i_crtime;
+
+	if (unlikely((inode->i_mode & S_IFMT) == 0)) {
+		print_block_data(sbi->sb, inode->i_ino, page_address(node_page),
+				0, F2FS_BLKSIZE);
+		f2fs_bug_on(sbi, 1);
+	}
+
 	f2fs_put_page(node_page, 1);
 
 	stat_inc_inline_xattr(inode);
@@ -748,6 +755,7 @@ void f2fs_evict_inode(struct inode *inode)
 	struct f2fs_inode_info *fi = F2FS_I(inode);
 	nid_t xnid = fi->i_xattr_nid;
 	int err = 0;
+	bool freeze_protected = false;
 
 	f2fs_abort_atomic_write(inode, true);
 
@@ -787,8 +795,10 @@ void f2fs_evict_inode(struct inode *inode)
 	f2fs_remove_ino_entry(sbi, inode->i_ino, UPDATE_INO);
 	f2fs_remove_ino_entry(sbi, inode->i_ino, FLUSH_INO);
 
-	if (!is_sbi_flag_set(sbi, SBI_IS_FREEZING))
+	if (!is_sbi_flag_set(sbi, SBI_IS_FREEZING)) {
 		sb_start_intwrite(inode->i_sb);
+		freeze_protected = true;
+	}
 	set_inode_flag(inode, FI_NO_ALLOC);
 	i_size_write(inode, 0);
 retry:
