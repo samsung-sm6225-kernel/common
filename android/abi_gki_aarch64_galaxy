@@ -78,6 +78,7 @@
   regulator_get_current_limit
   rfkill_set_sw_state
   sbitmap_queue_min_shallow_depth
+  sec_reserved_mem
   skb_copy_ubufs
   smpboot_unregister_percpu_thread
   snd_soc_add_card_controls

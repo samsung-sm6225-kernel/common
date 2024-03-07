@@ -532,14 +532,11 @@ static int acm_cdc_notify(struct f_acm *acm, u8 type, u16 value,
 
 static int acm_notify_serial_state(struct f_acm *acm)
 {
-	struct usb_composite_dev *cdev = acm->port.func.config->cdev;
 	int			status;
 	__le16			serial_state;
 
 	spin_lock(&acm->lock);
 	if (acm->notify_req) {
-		dev_dbg(&cdev->gadget->dev, "acm ttyGS%d serial state %04x\n",
-			acm->port_num, acm->serial_state);
 		serial_state = cpu_to_le16(acm->serial_state);
 		status = acm_cdc_notify(acm, USB_CDC_NOTIFY_SERIAL_STATE,
 				0, &serial_state, sizeof(acm->serial_state));
